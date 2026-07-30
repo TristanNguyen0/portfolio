@@ -1,7 +1,6 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-// import { getViteConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -10,4 +9,4 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/setupTests.ts',
   },
-} as any)
+})

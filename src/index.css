@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+  --color-tomorrow-blue: #4271ae;
+  --color-tomorrow-orange: #f5871f;
+  --color-tomorrow-yellow: #eab93d;
+  --color-tomorrow-green: #718c00;
+  --color-tomorrow-purple: #8959a8;
+}
