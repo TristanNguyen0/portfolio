@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
-import LeetCodeDashboard, { type LeetCodeData } from './LeetCodeDashboard'
+import { LeetCodeDashboardView, type LeetCodeData } from './LeetCodeDashboard'
 import { formatDate } from '../lib/formatDate'
 
 const fixture: LeetCodeData = {
@@ -14,7 +14,7 @@ const fixture: LeetCodeData = {
 }
 
 test('lists solved problems newest first with completion dates', () => {
-  render(<LeetCodeDashboard data={fixture} />)
+  render(<LeetCodeDashboardView data={fixture} />)
   const items = within(screen.getByRole('list', { name: /solved problems/i })).getAllByRole('listitem')
   expect(items.map((li) => within(li).getByRole('link').textContent)).toEqual([
     'Add Two Numbers',
@@ -25,7 +25,7 @@ test('lists solved problems newest first with completion dates', () => {
 })
 
 test('links each problem to leetcode.com', () => {
-  render(<LeetCodeDashboard data={fixture} />)
+  render(<LeetCodeDashboardView data={fixture} />)
   expect(screen.getByRole('link', { name: 'Two Sum' })).toHaveAttribute(
     'href',
     'https://leetcode.com/problems/two-sum/',
@@ -33,7 +33,7 @@ test('links each problem to leetcode.com', () => {
 })
 
 test('shows difficulty totals', () => {
-  render(<LeetCodeDashboard data={fixture} />)
+  render(<LeetCodeDashboardView data={fixture} />)
   expect(screen.getByText('3')).toBeInTheDocument()
   expect(screen.getByText('2 Easy')).toBeInTheDocument()
   expect(screen.getByText('1 Medium')).toBeInTheDocument()
@@ -41,7 +41,7 @@ test('shows difficulty totals', () => {
 })
 
 test('renders an empty state when nothing is solved yet', () => {
-  render(<LeetCodeDashboard data={{ ...fixture, totals: { easy: 0, medium: 0, hard: 0 }, solved: [] }} />)
+  render(<LeetCodeDashboardView data={{ ...fixture, totals: { easy: 0, medium: 0, hard: 0 }, solved: [] }} />)
   expect(screen.queryByRole('list', { name: /solved problems/i })).not.toBeInTheDocument()
   expect(screen.getByText(/recent solves will show up here/i)).toBeInTheDocument()
 })

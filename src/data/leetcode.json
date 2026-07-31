@@ -2,8 +2,8 @@
   "username": "TristanNguyen0",
   "updatedAt": "2026-07-31",
   "totals": {
-    "easy": 1,
-    "medium": 1,
+    "easy": 2,
+    "medium": 2,
     "hard": 0
   },
   "solved": [
@@ -11,6 +11,18 @@
       "title": "Simple Bank System",
       "titleSlug": "simple-bank-system",
       "difficulty": "Medium",
+      "completedAt": "2026-07-31"
+    },
+    {
+      "title": "Product of Array Except Self",
+      "titleSlug": "product-of-array-except-self",
+      "difficulty": "Medium",
+      "completedAt": "2026-07-31"
+    },
+    {
+      "title": "Valid Anagram",
+      "titleSlug": "valid-anagram",
+      "difficulty": "Easy",
       "completedAt": "2026-07-31"
     }
   ]
