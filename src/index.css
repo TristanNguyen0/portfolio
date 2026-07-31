@@ -7,3 +7,90 @@
   --color-tomorrow-green: #718c00;
   --color-tomorrow-purple: #8959a8;
 }
+
+@layer components {
+  /* Post bodies are plain JSX, so every element a post can use is styled here.
+     Writing a post never means remembering a wrapper component or a class name. */
+  .prose {
+    @apply leading-7 text-neutral-300;
+  }
+
+  .prose > * + * {
+    @apply mt-5;
+  }
+
+  /* scroll-mt clears the sticky header when a contents link jumps to a heading. */
+  .prose h2 {
+    @apply mt-12 scroll-mt-24 text-xl font-semibold tracking-tight text-neutral-100;
+  }
+
+  .prose h3 {
+    @apply mt-9 scroll-mt-24 text-base font-semibold tracking-tight text-neutral-200;
+  }
+
+  .prose a {
+    @apply text-neutral-100 underline decoration-neutral-700 underline-offset-4 transition-colors hover:decoration-neutral-400;
+  }
+
+  .prose strong {
+    @apply font-semibold text-neutral-100;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply space-y-2 pl-5 marker:text-neutral-600;
+  }
+
+  .prose ul {
+    @apply list-disc;
+  }
+
+  .prose ol {
+    @apply list-decimal;
+  }
+
+  .prose code {
+    @apply rounded bg-neutral-800/70 px-1.5 py-0.5 font-mono text-[0.85em] text-tomorrow-orange;
+  }
+
+  .prose pre {
+    @apply overflow-x-auto rounded-lg border border-neutral-800/80 bg-neutral-900/60 p-4 text-sm leading-6;
+  }
+
+  .prose pre code {
+    @apply bg-transparent p-0 text-neutral-300;
+  }
+
+  .prose blockquote {
+    @apply border-l-2 border-neutral-700 pl-4 text-neutral-400 italic;
+  }
+
+  .prose figure {
+    @apply my-8;
+  }
+
+  .prose img {
+    @apply rounded-lg border border-neutral-800/80;
+  }
+
+  .prose figcaption {
+    @apply mt-2 text-center text-xs text-neutral-500;
+  }
+
+  .prose table {
+    @apply w-full border-collapse text-left text-sm;
+  }
+
+  .prose th,
+  .prose td {
+    @apply border-b border-neutral-800/80 px-3 py-2;
+  }
+
+  .prose th {
+    @apply font-medium text-neutral-200;
+  }
+
+  .prose hr {
+    @apply my-10 border-neutral-800/80;
+  }
+}

@@ -1,16 +1,23 @@
 import logo from '../assets/logo.svg'
 import { socialLinks } from '../data/links'
+import Link from './Link'
 
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-800/80 bg-neutral-950/80 backdrop-blur">
       <div className="mx-auto flex max-w-2xl items-center justify-between px-6 py-4">
-        <a href="#top" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <img src={logo} alt="Tristan Nguyen logo" className="h-8 w-8 object-contain" />
           <span className="font-semibold tracking-tight text-neutral-100">Tristan Nguyen</span>
-        </a>
+        </Link>
 
         <nav className="flex items-center gap-5">
+          <Link href="/blog" className="text-sm text-neutral-400 transition-colors hover:text-neutral-100">
+            Blog
+          </Link>
+
+          <span aria-hidden="true" className="h-4 w-px bg-neutral-800" />
+
           {socialLinks.map(({ label, href, Icon, hoverClassName }) => (
             <a
               key={label}
