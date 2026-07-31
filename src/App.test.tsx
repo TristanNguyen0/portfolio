@@ -7,3 +7,8 @@ test('renders the name and all three sections', () => {
   expect(screen.getByText(/CAD & 3D printing/i)).toBeInTheDocument()
   expect(screen.getByText(/Homelab/i)).toBeInTheDocument()
 })
+
+test('renders the LeetCode dashboard section', () => {
+  render(<App />)
+  expect(screen.getByRole('heading', { name: /leetcode/i })).toBeInTheDocument()
+})
