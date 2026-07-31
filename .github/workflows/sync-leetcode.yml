@@ -12,11 +12,13 @@ jobs:
       contents: write
       actions: write # to dispatch the Deploy workflow after pushing
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
       - run: node scripts/sync-leetcode.mjs
+      # Requires github-actions[bot] in the bypass list of the main ruleset --
+      # required status checks otherwise reject this push.
       - name: Commit and deploy if stats changed
         env:
           GH_TOKEN: ${{ github.token }}
