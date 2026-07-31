@@ -1,5 +1,6 @@
 import Header from './components/Header'
 import Footer from './components/Footer'
+import LeetCodeDashboard from './components/LeetCodeDashboard'
 
 const sections = [
   {
@@ -41,6 +42,8 @@ export default function App() {
                 <p className="mt-2 text-neutral-300">{s.body}</p>
               </section>
             ))}
+
+            <LeetCodeDashboard />
           </div>
 
           <p className="mt-24 text-sm text-neutral-600">Writing and project pages coming shortly.</p>
