@@ -1,8 +1,10 @@
-name: Sync LeetCode
+name: Refresh LeetCode fallback snapshot
 
+# The Worker's cron trigger is what keeps the site current now; this only
+# refreshes src/data/leetcode.json, the build-time snapshot the page paints
+# before /api/leetcode answers. Manual because a stale fallback is visible for
+# milliseconds at most -- it is not worth a daily commit.
 on:
-  schedule:
-    - cron: '17 4 * * *' # daily at 04:17 UTC (off the hour to dodge the GitHub cron rush)
   workflow_dispatch:
 
 jobs:

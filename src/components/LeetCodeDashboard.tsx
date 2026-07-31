@@ -1,21 +1,8 @@
-import leetcodeData from '../data/leetcode.json'
 import { formatDate } from '../lib/formatDate'
+import type { Difficulty, LeetCodeData } from '../lib/leetcode'
+import { useLeetCodeData } from '../lib/useLeetCodeData'
 
-export type Difficulty = 'Easy' | 'Medium' | 'Hard'
-
-export interface SolvedProblem {
-  title: string
-  titleSlug: string
-  difficulty: Difficulty
-  completedAt: string
-}
-
-export interface LeetCodeData {
-  username: string
-  updatedAt: string
-  totals: { easy: number; medium: number; hard: number }
-  solved: SolvedProblem[]
-}
+export type { Difficulty, SolvedProblem, LeetCodeData } from '../lib/leetcode'
 
 const difficultyClassName: Record<Difficulty, string> = {
   Easy: 'text-tomorrow-green',
@@ -23,7 +10,13 @@ const difficultyClassName: Record<Difficulty, string> = {
   Hard: 'text-tomorrow-orange',
 }
 
-export default function LeetCodeDashboard({ data = leetcodeData as LeetCodeData }: { data?: LeetCodeData }) {
+/** Reads live data from the Worker; falls back to the bundled snapshot. */
+export default function LeetCodeDashboard() {
+  return <LeetCodeDashboardView data={useLeetCodeData()} />
+}
+
+/** Pure renderer, kept separate so it can be tested without any fetching. */
+export function LeetCodeDashboardView({ data }: { data: LeetCodeData }) {
   const solved = [...data.solved].sort((a, b) => b.completedAt.localeCompare(a.completedAt))
   const total = data.totals.easy + data.totals.medium + data.totals.hard
 

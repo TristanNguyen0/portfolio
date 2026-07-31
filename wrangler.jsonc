@@ -1,8 +1,37 @@
 {
   "name": "portfolio",
-  "compatibility_date": "2026-07-30",
+  "compatibility_date": "2026-07-31",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./worker/index.ts",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+    // Without this, the SPA fallback would answer /api/* with index.html
+    // before the Worker ever ran.
+    // "/__scheduled" is wrangler's local cron-test route; without it the SPA
+    // fallback answers there too and `wrangler dev --test-scheduled` never fires.
+    "run_worker_first": ["/api/*", "/__scheduled"]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "LEETCODE",
+      "id": "6c45d49516f846c9ac69d396275824c4"
+    }
+  ],
+  "triggers": {
+    // Every 15 minutes. The upstream allows 120 req/hour per IP and this uses
+    // ~4, leaving headroom for the per-problem difficulty lookups on a new solve.
+    "crons": ["*/15 * * * *"]
+  },
+  "vars": {
+    "LEETCODE_USERNAME": "TristanNguyen0",
+    // Point this at a self-hosted alfa-leetcode-api to drop the dependency on
+    // the shared public instance.
+    "LEETCODE_API_BASE": "https://alfa-leetcode-api.onrender.com"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
   }
 }
