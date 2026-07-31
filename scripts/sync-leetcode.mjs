@@ -21,6 +21,7 @@ async function graphql(query, variables) {
 }
 
 const data = JSON.parse(await readFile(DATA_PATH, 'utf8'))
+const before = JSON.stringify({ totals: data.totals, solved: data.solved })
 
 const { recentAcSubmissionList, matchedUser } = await graphql(
   `query ($username: String!) {
@@ -54,6 +55,14 @@ for (const sub of fresh) {
 }
 
 data.solved.sort((a, b) => b.completedAt.localeCompare(a.completedAt))
+
+// Leave the file byte-identical when nothing actually changed. Bumping
+// updatedAt on every run would make the scheduled job commit daily forever.
+if (JSON.stringify({ totals: data.totals, solved: data.solved }) === before) {
+  console.log('No changes; leetcode.json left untouched.')
+  process.exit(0)
+}
+
 data.updatedAt = new Date().toISOString().slice(0, 10)
 
 await writeFile(DATA_PATH, JSON.stringify(data, null, 2) + '\n')
