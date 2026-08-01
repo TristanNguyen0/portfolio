@@ -15,6 +15,8 @@ export interface Category {
   body: string
   /** Shown as a badge next to the title when set. */
   status?: string
+  /** Repo (or other home) for the project — turns the status badge into a link. */
+  href?: string
 }
 
 export const categories: Category[] = [
@@ -38,6 +40,7 @@ export const categories: Category[] = [
     dotClassName: 'bg-tomorrow-purple',
     textClassName: 'text-tomorrow-purple',
     status: 'In progress',
+    href: 'https://github.com/TristanNguyen0/mr-mouse-stats',
     body: 'Mouse settings — DPI, in-game sensitivity, and hardware — for the pros playing Marvel Rivals in the Ignite circuit. Rosters come from the Liquipedia API; the settings themselves are collected passively from Twitch chat, by listening for what the channel bots already answer. Every reading is appended rather than overwritten, so the site can show how a player’s settings drifted over a season instead of just today’s snapshot.',
   },
 ]

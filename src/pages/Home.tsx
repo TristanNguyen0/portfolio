@@ -16,11 +16,21 @@ export default function Home() {
             <h2 className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-neutral-500">
               <span className={`h-1.5 w-1.5 rounded-full ${category.dotClassName}`} />
               {category.title}
-              {category.status && (
-                <span className="rounded-full border border-neutral-800 px-2 py-0.5 text-[0.65rem] font-normal normal-case tracking-normal text-neutral-500">
-                  {category.status}
-                </span>
-              )}
+              {category.status &&
+                (category.href ? (
+                  <Link
+                    href={category.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-full border border-neutral-800 px-2 py-0.5 text-[0.65rem] font-normal normal-case tracking-normal text-neutral-500 transition-colors hover:border-neutral-700 hover:text-neutral-300"
+                  >
+                    {category.status}
+                  </Link>
+                ) : (
+                  <span className="rounded-full border border-neutral-800 px-2 py-0.5 text-[0.65rem] font-normal normal-case tracking-normal text-neutral-500">
+                    {category.status}
+                  </span>
+                ))}
             </h2>
             <p className="mt-2 text-neutral-300">{category.body}</p>
           </section>
