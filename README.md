@@ -4,7 +4,7 @@ Personal website.
 
 ## Writing a blog post
 
-Posts are `.tsx` files — no CMS, no markdown toolchain. Copy the template into
+Posts are `.tsx` files. Copy the template into
 the drafts folder:
 
 ```sh
@@ -26,11 +26,6 @@ Anything under `src/content/drafts/` renders on `npm run dev` with a DRAFT tag
 and is compiled out of the production build entirely — the text never reaches
 the deployed bundle. Files starting with `_` are always skipped, which is why
 the template itself never publishes.
-
-The contents sidebar on a post is generated from its `<h2>`/`<h3>` headings, so
-posts never maintain their own outline. Categories live in
-`src/data/categories.ts` and drive both the home page sections and the tag on
-each post.
 
 ## Commands
 
