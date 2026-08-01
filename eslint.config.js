@@ -19,4 +19,11 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // A post is a component plus its `meta` front matter, in one file by design.
+    files: ['src/content/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': ['error', { allowExportNames: ['meta'] }],
+    },
+  },
 ])

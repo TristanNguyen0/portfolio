@@ -1,54 +1,40 @@
+import { useEffect, type ReactElement } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import LeetCodeDashboard from './components/LeetCodeDashboard'
+import { getPost } from './lib/posts'
+import { usePathname } from './lib/router'
+import BlogIndex from './pages/BlogIndex'
+import BlogPost from './pages/BlogPost'
+import Home from './pages/Home'
+import NotFound from './pages/NotFound'
 
-const sections = [
-  {
-    title: 'Software',
-    accentClassName: 'bg-tomorrow-blue',
-    body: 'Full-stack TypeScript, Docker, AWS. Currently building a queued job runner with retries, error classification, and a public run dashboard.',
-  },
-  {
-    title: 'Homelab',
-    accentClassName: 'bg-tomorrow-green',
-    body: 'Debian server running Jellyfin, Frigate, and a RustDesk relay in Docker, reachable over Tailscale. Notes on what broke and why.',
-  },
-  {
-    title: 'CAD & 3D printing',
-    accentClassName: 'bg-tomorrow-yellow',
-    body: 'Custom mice and PC ducting printed in PETG. Design constraints, print settings, and the iterations that warped.',
-  },
-]
+const SITE_NAME = 'Tristan Nguyen'
+const POST_PREFIX = '/blog/'
+
+function resolve(pathname: string): { title: string; page: ReactElement } {
+  if (pathname === '/') return { title: `${SITE_NAME} — Software Engineer`, page: <Home /> }
+  if (pathname === '/blog') return { title: `Blog — ${SITE_NAME}`, page: <BlogIndex /> }
+
+  if (pathname.startsWith(POST_PREFIX)) {
+    const post = getPost(pathname.slice(POST_PREFIX.length))
+    if (post) return { title: `${post.title} — ${SITE_NAME}`, page: <BlogPost post={post} /> }
+  }
+
+  return { title: `Not found — ${SITE_NAME}`, page: <NotFound /> }
+}
 
 export default function App() {
+  const { title, page } = resolve(usePathname())
+
+  useEffect(() => {
+    document.title = title
+  }, [title])
+
   return (
-    <div id="top" className="flex min-h-screen flex-col bg-neutral-950 text-neutral-100">
+    <div className="flex min-h-screen flex-col bg-neutral-950 text-neutral-100">
       <Header />
 
-      <main className="flex-1">
-        <div className="mx-auto max-w-2xl px-6 py-24">
-          <h1 className="text-4xl font-semibold tracking-tight">Tristan Nguyen</h1>
-          <p className="mt-3 text-lg text-neutral-400">
-            Software Engineer | Computer Science Graduate, TMU '26 | JavaScript/TypeScript, React, Node.js, Python, AWS, Docker
-          </p>
-
-          <div className="mt-16 space-y-10">
-            {sections.map((s) => (
-              <section key={s.title}>
-                <h2 className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-neutral-500">
-                  <span className={`h-1.5 w-1.5 rounded-full ${s.accentClassName}`} />
-                  {s.title}
-                </h2>
-                <p className="mt-2 text-neutral-300">{s.body}</p>
-              </section>
-            ))}
-
-            <LeetCodeDashboard />
-          </div>
-
-          <p className="mt-24 text-sm text-neutral-600">Writing and project pages coming shortly.</p>
-        </div>
-      </main>
+      <main className="flex-1">{page}</main>
 
       <Footer />
     </div>

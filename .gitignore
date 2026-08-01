@@ -2,3 +2,6 @@ node_modules
 dist
 .dev.vars
 .env
+
+# Local miniflare state from `wrangler dev` (local KV, caches, traces)
+.wrangler
