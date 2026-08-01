@@ -23,6 +23,16 @@ test('badges the categories that declare a status', () => {
   }
 })
 
+test('points the status badge at the project when the category has a link', () => {
+  render(<App />)
+
+  for (const category of categories.filter((c) => c.status && c.href)) {
+    const badge = screen.getByRole('link', { name: category.status! })
+    expect(badge).toHaveAttribute('href', category.href!)
+    expect(badge).toHaveAttribute('target', '_blank')
+  }
+})
+
 test('no longer renders the Software section', () => {
   render(<App />)
   expect(screen.queryByText(/^Software$/)).not.toBeInTheDocument()
