@@ -25,7 +25,7 @@ export const meta: PostMeta = {
   description: 'The short version, in a sentence.',
   // YYYY-MM-DD. Sorts the index; also what renders as the date.
   date: '2026-08-01',
-  // 'homelab' | 'cad' | 'claude-watch' — see src/data/categories.ts
+  // 'homelab' | 'cad' | 'mr-mouse-stats' — see src/data/categories.ts
   category: 'homelab',
 }
 
