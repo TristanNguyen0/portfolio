@@ -7,7 +7,7 @@
 // the shared public one (120 req/hour per IP, and it cold-starts).
 import { readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
-import { createLeetCodeClient, fetchLeetCodeData } from '../src/lib/leetcode.ts'
+import { createLeetCodeClient, fetchLeetCodeData, todayInTimeZone } from '../src/lib/leetcode.ts'
 
 const DATA_PATH = fileURLToPath(new URL('../src/data/leetcode.json', import.meta.url))
 
@@ -25,6 +25,6 @@ if (JSON.stringify({ totals, solved }) === before) {
 }
 
 const added = solved.length - data.solved.length
-const updatedAt = new Date().toISOString().slice(0, 10)
+const updatedAt = todayInTimeZone()
 await writeFile(DATA_PATH, JSON.stringify({ ...data, updatedAt, totals, solved }, null, 2) + '\n')
 console.log(`Synced: ${added} new solve(s), ${solved.length} total in file.`)

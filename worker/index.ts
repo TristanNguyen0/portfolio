@@ -10,6 +10,7 @@
 import {
   createLeetCodeClient,
   fetchLeetCodeData,
+  todayInTimeZone,
   type LeetCodeData,
   type SolvedProblem,
 } from '../src/lib/leetcode'
@@ -50,7 +51,9 @@ async function refresh(env: Env): Promise<LeetCodeData> {
 
   const data: LeetCodeData = {
     username: env.LEETCODE_USERNAME,
-    updatedAt: new Date().toISOString().slice(0, 10),
+    // Toronto, not UTC. The cron runs around the clock, so between 7pm and
+    // midnight locally a UTC date would already read as tomorrow.
+    updatedAt: todayInTimeZone(),
     totals,
     solved,
   }

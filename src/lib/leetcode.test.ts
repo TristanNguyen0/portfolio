@@ -4,6 +4,8 @@ import {
   fetchLeetCodeData,
   mergeSolves,
   toIsoDate,
+  toLocalDate,
+  todayInTimeZone,
   type SolvedProblem,
 } from './leetcode'
 
@@ -46,8 +48,10 @@ test('reads totals and new solves from the profile endpoint', async () => {
 
   expect(data.totals).toEqual({ easy: 2, medium: 1, hard: 0 })
   expect(data.solved).toEqual([
+    // 09:39 Toronto — same day in either zone.
     { title: 'Valid Anagram', titleSlug: 'valid-anagram', difficulty: 'Easy', completedAt: '2026-07-31' },
-    { title: 'Two Sum', titleSlug: 'two-sum', difficulty: 'Easy', completedAt: '2026-07-31' },
+    // 23:14 Toronto, which is 03:14 UTC the next day. Dated locally, so the 30th.
+    { title: 'Two Sum', titleSlug: 'two-sum', difficulty: 'Easy', completedAt: '2026-07-30' },
   ])
   expect(calls).toContain('/TristanNguyen0/profile')
 })
@@ -104,4 +108,31 @@ test('mergeSolves dedupes by slug and sorts newest first', () => {
 
 test('toIsoDate converts unix seconds to a plain date', () => {
   expect(toIsoDate('1785505142')).toBe('2026-07-31')
+})
+
+// The bug these guard: an evening solve in Toronto is already tomorrow in UTC,
+// so dating it from the UTC calendar filed it under the wrong day.
+
+test('dates an evening solve by the Toronto day, not the UTC day', () => {
+  // 2026-07-30 20:00 EDT === 2026-07-31 00:00 UTC
+  const evening = new Date('2026-07-31T00:00:00Z')
+  expect(evening.toISOString().slice(0, 10)).toBe('2026-07-31')
+  expect(toLocalDate(evening)).toBe('2026-07-30')
+})
+
+test('follows EDT in summer and EST in winter', () => {
+  // Both are 21:30 local the previous day, on either side of the DST boundary.
+  expect(toLocalDate(new Date('2026-07-15T01:30:00Z'))).toBe('2026-07-14') // EDT, UTC-4
+  expect(toLocalDate(new Date('2026-01-15T02:30:00Z'))).toBe('2026-01-14') // EST, UTC-5
+})
+
+test('leaves a midday solve on the same day in both zones', () => {
+  const midday = new Date('2026-07-31T16:00:00Z')
+  expect(toLocalDate(midday)).toBe('2026-07-31')
+  expect(toLocalDate(midday)).toBe(midday.toISOString().slice(0, 10))
+})
+
+test('todayInTimeZone returns a plain YYYY-MM-DD', () => {
+  expect(todayInTimeZone()).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+  expect(todayInTimeZone()).toBe(toLocalDate(new Date()))
 })

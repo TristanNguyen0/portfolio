@@ -84,9 +84,40 @@ export function createLeetCodeClient({ baseUrl = DEFAULT_API_BASE, fetch = globa
 
 export type LeetCodeClient = ReturnType<typeof createLeetCodeClient>
 
+/**
+ * Every date this dashboard stores is a calendar date in Toronto, not in UTC.
+ * A problem solved at 8pm on the 30th belongs to the 30th; the same instant
+ * formatted as UTC would file it under the 31st.
+ *
+ * An IANA zone rather than a fixed -05:00 offset, so it tracks EST in winter
+ * and EDT in summer without a code change.
+ */
+export const TIME_ZONE = 'America/Toronto'
+
+const isoDateFormatter = new Intl.DateTimeFormat('en-CA', {
+  timeZone: TIME_ZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+})
+
+/** The plain YYYY-MM-DD that `date` falls on in TIME_ZONE. */
+export function toLocalDate(date: Date): string {
+  // Assembled from parts rather than trusting en-CA to keep emitting
+  // YYYY-MM-DD, since that's a property of the locale data, not the API.
+  const parts = isoDateFormatter.formatToParts(date)
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? ''
+  return `${value('year')}-${value('month')}-${value('day')}`
+}
+
 /** Unix seconds (as the API returns them) to the plain YYYY-MM-DD the UI renders. */
 export function toIsoDate(timestamp: string | number): string {
-  return new Date(Number(timestamp) * 1000).toISOString().slice(0, 10)
+  return toLocalDate(new Date(Number(timestamp) * 1000))
+}
+
+/** Today's date in TIME_ZONE — what `updatedAt` records. */
+export function todayInTimeZone(): string {
+  return toLocalDate(new Date())
 }
 
 /**
