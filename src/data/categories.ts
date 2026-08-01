@@ -1,7 +1,7 @@
 // One entry per thing I write about. This drives both the sections on the home
 // page and the coloured tag on every blog post, so a category is added once.
 
-export type CategorySlug = 'homelab' | 'cad' | 'claude-watch'
+export type CategorySlug = 'homelab' | 'cad' | 'mr-mouse-stats'
 
 export interface Category {
   slug: CategorySlug
@@ -33,12 +33,12 @@ export const categories: Category[] = [
     body: 'Custom mice and PC ducting printed in PETG. Design constraints, print settings, and the iterations that warped.',
   },
   {
-    slug: 'claude-watch',
-    title: 'Claude usage on Sensor Watch',
+    slug: 'mr-mouse-stats',
+    title: 'Mr Mouse Stats',
     dotClassName: 'bg-tomorrow-purple',
     textClassName: 'text-tomorrow-purple',
     status: 'In progress',
-    body: "An open-source watch face that puts Claude usage on my wrist. A small service polls Anthropic's usage APIs and pushes the current window to a Sensor Watch Pro, which buzzes when a limit is close to spent and again when the window resets. The rest of the time its custom LCD just shows the percentage used, so checking costs a glance instead of a terminal.",
+    body: 'Mouse settings — DPI, in-game sensitivity, and hardware — for the pros playing Marvel Rivals in the Ignite circuit. Rosters come from the Liquipedia API; the settings themselves are collected passively from Twitch chat, by listening for what the channel bots already answer. Every reading is appended rather than overwritten, so the site can show how a player’s settings drifted over a season instead of just today’s snapshot.',
   },
 ]
 

@@ -6,11 +6,11 @@ import { posts } from '../lib/posts'
 export default function BlogIndex() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-24">
-      <h1 className="text-3xl font-semibold tracking-tight">Development Progress, Learning Notes, and other musings.</h1>
+      <h1 className="text-3xl font-semibold tracking-tight">Personal Projects, Development Progress, and other musings.</h1>
       {/* <p className="mt-3 text-neutral-400">
       
       </p> */}
-      
+
       {posts.length === 0 ? (
         <p className="mt-16 text-sm text-neutral-600">Nothing published yet — the first post is still in drafts.</p>
       ) : (

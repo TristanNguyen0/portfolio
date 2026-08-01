@@ -1,10 +1,5 @@
 import { useSyncExternalStore } from 'react'
 
-// A ~40-line router instead of a dependency. The whole site is three routes
-// (/, /blog, /blog/:slug) and wrangler.jsonc already sets
-// not_found_handling: "single-page-application", so a hard load of a deep link
-// lands on index.html and this reads the path back off window.location.
-
 const listeners = new Set<() => void>()
 
 function subscribe(onChange: () => void): () => void {

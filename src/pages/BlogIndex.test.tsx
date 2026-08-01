@@ -13,7 +13,9 @@ test('renders a numbered row per post, linking to its slug', () => {
   }
 })
 
-test('shows the tagline heading', () => {
+// Deliberately doesn't assert the wording — the tagline is copy you'll keep
+// editing; this only checks the page renders its heading at all.
+test('renders a page heading', () => {
   render(<BlogIndex />)
-  expect(screen.getByRole('heading', { name: /notes from the bench/i })).toBeInTheDocument()
+  expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
 })

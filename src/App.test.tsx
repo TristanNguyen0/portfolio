@@ -1,22 +1,31 @@
 import { render, screen } from '@testing-library/react'
 import App from './App'
+import { categories } from './data/categories'
 
-test('renders the name and the three sections', () => {
+// Driven off the category data rather than hardcoded copy, so rewording a
+// section heading or blurb doesn't break the suite.
+
+test('renders the name and a section per category', () => {
   render(<App />)
   expect(screen.getByRole('heading', { name: /tristan nguyen/i })).toBeInTheDocument()
-  expect(screen.getByText(/Homelab/i)).toBeInTheDocument()
-  expect(screen.getByText(/CAD & 3D printing/i)).toBeInTheDocument()
-  expect(screen.getByText(/Claude usage on Sensor Watch/i)).toBeInTheDocument()
+
+  for (const category of categories) {
+    expect(screen.getByText(category.title)).toBeInTheDocument()
+    expect(screen.getByText(category.body)).toBeInTheDocument()
+  }
+})
+
+test('badges the categories that declare a status', () => {
+  render(<App />)
+
+  for (const category of categories.filter((c) => c.status)) {
+    expect(screen.getByText(category.status!)).toBeInTheDocument()
+  }
 })
 
 test('no longer renders the Software section', () => {
   render(<App />)
   expect(screen.queryByText(/^Software$/)).not.toBeInTheDocument()
-})
-
-test('marks the unfinished project as in progress', () => {
-  render(<App />)
-  expect(screen.getByText(/In progress/i)).toBeInTheDocument()
 })
 
 test('renders the LeetCode dashboard section', () => {
