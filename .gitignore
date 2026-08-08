@@ -5,3 +5,6 @@ dist
 
 # Local miniflare state from `wrangler dev` (local KV, caches, traces)
 .wrangler
+
+# Claude Code local state
+.claude/
