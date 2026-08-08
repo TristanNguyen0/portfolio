@@ -8,7 +8,103 @@
   --color-tomorrow-purple: #8959a8;
 }
 
+/* The track holds N stacked copies of the list; one cycle slides it up by exactly
+   one copy (100% / N), which lands the next copy where the last one started, so the
+   loop restarts with no seam. N is measured at runtime — see MAX_TICKER_COPIES. */
+@keyframes ticker-drift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-1 * var(--ticker-shift, 50%)));
+  }
+}
+
 @layer components {
+  /* A stock-ticker style panel: the list drifts upward on its own so the section
+     reads as live even at three solves, where a normal list would just sit there. */
+  .ticker {
+    overflow: hidden;
+    /* Reserve the scrollbar gutter up front so revealing it on hover doesn't
+       reflow the rows sideways (CLS). */
+    scrollbar-gutter: stable;
+  }
+
+  /* Hovering or tabbing in hands control back: the drift stops and the panel
+     becomes an ordinary scrollable list, so links can actually be clicked. */
+  .ticker:hover,
+  .ticker:focus-within {
+    overflow-y: auto;
+  }
+
+  .ticker-track {
+    animation: ticker-drift var(--ticker-duration, 20s) linear infinite;
+  }
+
+  .ticker:hover .ticker-track,
+  .ticker:focus-within .ticker-track {
+    animation-play-state: paused;
+  }
+
+  /* Motion-sensitive users get no drift at all. The duplicate copy is dropped too,
+     so it degrades to a plain scrollable list instead of showing everything twice. */
+  @media (prefers-reduced-motion: reduce) {
+    .ticker {
+      overflow-y: auto;
+    }
+
+    .ticker-track {
+      animation: none;
+    }
+
+    .ticker-clone {
+      display: none;
+    }
+  }
+
+  /* Scroll style for containers that scroll *inside* the page (the LeetCode list,
+     code blocks). The page itself keeps its native scrollbar.
+
+     Firefox only gets the two properties below; WebKit gets the pill treatment.
+     neutral-500 is the lightest neutral that still clears WCAG 1.4.11's 3:1 for
+     non-text UI (4.18:1 on neutral-950), so the thumb stays findable. */
+  .scrollbar-subtle,
+  .prose pre {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-neutral-500) transparent;
+  }
+
+  .scrollbar-subtle::-webkit-scrollbar,
+  .prose pre::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .scrollbar-subtle::-webkit-scrollbar-track,
+  .prose pre::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* A transparent border plus content-box clipping paints a 6px pill inside the
+     10px gutter, so the thumb floats clear of the border instead of hugging it.
+     The full 10px stays grabbable — only the paint is inset, not the hit area. */
+  .scrollbar-subtle::-webkit-scrollbar-thumb,
+  .prose pre::-webkit-scrollbar-thumb {
+    background-color: var(--color-neutral-500);
+    background-clip: content-box;
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    transition: background-color 150ms ease-out;
+  }
+
+  /* Picks up the accent already used for link hovers and the section dot. */
+  .scrollbar-subtle::-webkit-scrollbar-thumb:hover,
+  .prose pre::-webkit-scrollbar-thumb:hover,
+  .scrollbar-subtle::-webkit-scrollbar-thumb:active,
+  .prose pre::-webkit-scrollbar-thumb:active {
+    background-color: var(--color-tomorrow-orange);
+  }
+
   /* Post bodies are plain JSX, so every element a post can use is styled here.
      Writing a post never means remembering a wrapper component or a class name. */
   .prose {
