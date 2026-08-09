@@ -1,41 +1,41 @@
 import LeetCodeDashboard from '../components/LeetCodeDashboard'
-import Link from '../components/Link'
-import { categories } from '../data/categories'
+import ProjectCard from '../components/ProjectCard'
+import { projects } from '../data/projects'
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-2xl px-6 py-24">
-      <h1 className="text-4xl font-semibold tracking-tight">Tristan Nguyen</h1>
-      <p className="mt-3 text-lg text-neutral-400">
-        Software Engineer | Computer Science Graduate, TMU '26 | JavaScript/TypeScript, React, Node.js, Python, AWS, Docker
-      </p>
+    <div className="page">
+      <div className="column">
+        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Tristan Nguyen</h1>
+        {/* The tagline is a run of short credentials rather than prose, so it reads
+            fine across the full column even though body copy would not. */}
+        <p className="mt-3 text-lg text-neutral-400">
+          Software Engineer | Computer Science Graduate, TMU '26<br></br>
+          TypeScript • React • Node.js • Python • AWS • Docker
+        </p>
 
-      <div className="mt-16 space-y-10">
-        {categories.map((category) => (
-          <section key={category.slug}>
-            <h2 className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-neutral-500">
-              <span className={`h-1.5 w-1.5 rounded-full ${category.dotClassName}`} />
-              {category.title}
-              {category.status && (
-                <span className="rounded-full border border-neutral-800 px-2 py-0.5 text-[0.65rem] font-normal normal-case tracking-normal text-neutral-500">
-                  {category.status}
-                </span>
-              )}
+        <div className="mt-16 space-y-10">
+          <section>
+            <h2 className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-neutral-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-tomorrow-purple" />
+              Projects
             </h2>
-            <p className="mt-2 text-neutral-300">{category.body}</p>
+
+            {/* Two across, so a card keeps enough width for a legible 16:9 capture
+                and a full stack row. Single column below sm. */}
+            <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {projects.map((project) => (
+                <li key={project.slug} className="flex">
+                  <ProjectCard project={project} />
+                </li>
+              ))}
+            </ul>
           </section>
-        ))}
 
-        <LeetCodeDashboard />
+          <LeetCodeDashboard />
+        </div>
+
       </div>
-
-      <p className="mt-24 text-sm text-neutral-600">
-        I write most of this up as I go —{' '}
-        <Link href="/blog" className="text-neutral-400 transition-colors hover:text-neutral-200">
-          read the notes
-        </Link>
-        .
-      </p>
     </div>
   )
 }

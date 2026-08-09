@@ -6,7 +6,10 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'worker-configuration.d.ts']),
+  // .claude holds local agent state, including git worktrees that carry their own
+  // tsconfig. Linting into them gives every file in the repo a "multiple candidate
+  // TSConfigRootDirs" parse error, so the whole run fails.
+  globalIgnores(['dist', 'worker-configuration.d.ts', '.claude']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
