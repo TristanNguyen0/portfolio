@@ -1,5 +1,6 @@
 import LeetCodeDashboard from '../components/LeetCodeDashboard'
 import Link from '../components/Link'
+import Screenshots from '../components/Screenshots'
 import { categories } from '../data/categories'
 
 export default function Home() {
@@ -33,6 +34,7 @@ export default function Home() {
                 ))}
             </h2>
             <p className="mt-2 text-neutral-300">{category.body}</p>
+            {category.images && <Screenshots images={category.images} label={category.title} />}
           </section>
         ))}
 
