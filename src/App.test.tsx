@@ -33,6 +33,18 @@ test('points the status badge at the project when the category has a link', () =
   }
 })
 
+test('shows a linked screenshot for every image a category declares', () => {
+  render(<App />)
+
+  for (const category of categories.filter((c) => c.images)) {
+    for (const image of category.images!) {
+      const thumbnail = screen.getByRole('img', { name: image.alt })
+      expect(thumbnail).toHaveAttribute('src', image.src)
+      expect(thumbnail.closest('a')).toHaveAttribute('href', image.src)
+    }
+  }
+})
+
 test('no longer renders the Software section', () => {
   render(<App />)
   expect(screen.queryByText(/^Software$/)).not.toBeInTheDocument()
