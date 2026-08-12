@@ -67,7 +67,7 @@ export function LeetCodeDashboardView({ data }: { data: LeetCodeData }) {
 
   return (
     <section>
-      <h2 className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-neutral-500">
+      <h2 className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-neutral-400">
         <span className="h-1.5 w-1.5 rounded-full bg-tomorrow-orange" />
         LeetCode
       </h2>
@@ -80,7 +80,7 @@ export function LeetCodeDashboardView({ data }: { data: LeetCodeData }) {
       </p>
 
       {solved.length === 0 ? (
-        <p className="mt-3 text-sm text-neutral-600">Recent solves will show up here.</p>
+        <p className="mt-3 text-sm text-faint">Recent solves will show up here.</p>
       ) : (
         <div
           ref={panelRef}
@@ -100,7 +100,7 @@ export function LeetCodeDashboardView({ data }: { data: LeetCodeData }) {
         </div>
       )}
 
-      <p className="mt-2 text-xs text-neutral-600">
+      <p className="mt-2 text-xs text-faint">
         Updated {formatDate(data.updatedAt)} ·{' '}
         <a
           href={`https://leetcode.com/u/${data.username}/`}
@@ -137,7 +137,10 @@ function SolvedList({
       className={`divide-y divide-neutral-800/80 ${clone ? 'ticker-clone border-t border-neutral-800/80' : ''}`}
     >
       {solved.map((p) => (
-        <li key={p.titleSlug} className="flex items-baseline justify-between gap-4 px-4 py-2.5">
+        <li
+          key={p.titleSlug}
+          className="flex items-baseline justify-between gap-4 px-4 py-2.5 transition-colors hover:bg-neutral-900/70"
+        >
           <div className="min-w-0">
             <a
               href={`https://leetcode.com/problems/${p.titleSlug}/`}
@@ -150,7 +153,7 @@ function SolvedList({
             </a>
             <span className={`text-xs ${difficultyClassName[p.difficulty]}`}>{p.difficulty}</span>
           </div>
-          <time dateTime={p.completedAt} className="shrink-0 text-sm text-neutral-500">
+          <time dateTime={p.completedAt} className="shrink-0 text-sm text-faint">
             {formatDate(p.completedAt)}
           </time>
         </li>

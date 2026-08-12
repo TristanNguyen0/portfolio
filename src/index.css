@@ -1,11 +1,66 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* Where the shell reaches its full 40px inset. Reference layout's 1120px step. */
+  --breakpoint-wide: 70rem;
+
+  /* The reading column is page-centred at every width, so its left edge sits at
+     (viewport - 800) / 2. The rail needs 200px plus a 64px gap to its left, so it
+     only has room from (264 + 16 slack) * 2 + 800 = 1360px up. Below this the
+     contents collapse into the <details> above the post instead. */
+  --breakpoint-rail: 85rem;
+
+  /* The faintest text tier that still clears WCAG AA on this background: 5.01:1 on
+     neutral-950, where neutral-600 managed only 2.53:1 and neutral-500 only 4.18:1.
+     Anything dimmer than this is decoration, not text. */
+  --color-faint: #808080;
+
   --color-tomorrow-blue: #4271ae;
   --color-tomorrow-orange: #f5871f;
   --color-tomorrow-yellow: #eab93d;
   --color-tomorrow-green: #718c00;
   --color-tomorrow-purple: #8959a8;
+}
+
+@layer base {
+  /* Every interactive element was relying on :hover alone, which leaves keyboard
+     users with no idea where they are. One ring, defined once, covers the site.
+     :focus-visible rather than :focus so it never fires on mouse clicks. */
+  :focus-visible {
+    outline: 2px solid var(--color-tomorrow-orange);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-tomorrow-orange) 30%, transparent);
+    color: var(--color-neutral-100);
+  }
+
+  /* Anchor jumps from the contents rail land under the sticky header without this. */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Honour the OS setting globally, not just for the ticker: kill smooth scrolling
+     and collapse every transition and animation rather than merely shortening them. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 /* The track holds N stacked copies of the list; one cycle slides it up by exactly
@@ -21,6 +76,50 @@
 }
 
 @layer components {
+  /* Page frame, matched to xbabtech.com/blog/smoothing: a 1180px shell whose inline
+     inset steps 20 → 28 → 40px, holding a centred 800px reading column. Header,
+     footer and every page share it, so their left and right edges line up. */
+  .shell {
+    @apply mx-auto max-w-[1180px] px-5 sm:px-7 wide:px-10;
+  }
+
+  /* Same frame plus the vertical rhythm pages use: 96/120 → 104/140 → 120/160. */
+  .page {
+    @apply mx-auto max-w-[1180px] px-5 pt-24 pb-30 sm:px-7 sm:pt-26 sm:pb-35 wide:px-10 wide:pt-30 wide:pb-40;
+  }
+
+  /* The reading column itself. Centred in the shell, so on wide screens the leftover
+     space sits outside it and the contents rail can occupy some of that space. */
+  .column {
+    @apply mx-auto w-full max-w-[800px];
+  }
+
+  /* Hover label on a stack icon. Written here rather than as a Tailwind
+     group-hover variant: the generated variant class carries two escaped
+     characters (`group-hover\/tech\:opacity-100`) and did not win the cascade
+     against `opacity-0` in practice, where this plain rule is unambiguous. Same
+     shape as .ticker:hover .ticker-track above. */
+  .tech-badge .tech-label {
+    opacity: 0;
+    transition: opacity 150ms ease-out;
+  }
+
+  .tech-badge:hover .tech-label {
+    opacity: 1;
+  }
+
+  /* Backdrop for a project card whose capture doesn't exist yet. A faint hatch
+     reads as a deliberately empty frame; a flat panel reads as a broken image. */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--color-neutral-800) 0,
+      var(--color-neutral-800) 1px,
+      transparent 1px,
+      transparent 9px
+    );
+  }
+
   /* A stock-ticker style panel: the list drifts upward on its own so the section
      reads as live even at three solves, where a normal list would just sit there. */
   .ticker {
@@ -106,26 +205,31 @@
   }
 
   /* Post bodies are plain JSX, so every element a post can use is styled here.
-     Writing a post never means remembering a wrapper component or a class name. */
+     Writing a post never means remembering a wrapper component or a class name.
+     text-pretty stops the last line of a paragraph landing as a single orphan word,
+     which is the most visible raggedness at this measure. */
   .prose {
-    @apply leading-7 text-neutral-300;
+    @apply text-pretty leading-7 text-neutral-300;
   }
 
   .prose > * + * {
     @apply mt-5;
   }
 
-  /* scroll-mt clears the sticky header when a contents link jumps to a heading. */
+  /* Headings get a lot more space above than below, so each one visually belongs to
+     the text beneath it rather than floating between two blocks. 56/16, as reference. */
   .prose h2 {
-    @apply mt-12 scroll-mt-24 text-xl font-semibold tracking-tight text-neutral-100;
+    @apply mt-14 scroll-mt-24 text-2xl font-semibold tracking-tight text-balance text-neutral-100;
   }
 
   .prose h3 {
-    @apply mt-9 scroll-mt-24 text-base font-semibold tracking-tight text-neutral-200;
+    @apply mt-10 scroll-mt-24 text-lg font-semibold tracking-tight text-balance text-neutral-200;
   }
 
+  /* decoration-neutral-700 was 1.9:1 — the underline was effectively invisible, so
+     links read as plain bold text. faint clears 5:1 and still sits under the word. */
   .prose a {
-    @apply text-neutral-100 underline decoration-neutral-700 underline-offset-4 transition-colors hover:decoration-neutral-400;
+    @apply text-neutral-100 underline decoration-faint underline-offset-4 transition-colors hover:decoration-tomorrow-orange;
   }
 
   .prose strong {
@@ -134,7 +238,7 @@
 
   .prose ul,
   .prose ol {
-    @apply space-y-2 pl-5 marker:text-neutral-600;
+    @apply space-y-2 pl-5 marker:text-faint;
   }
 
   .prose ul {
@@ -170,7 +274,7 @@
   }
 
   .prose figcaption {
-    @apply mt-2 text-center text-xs text-neutral-500;
+    @apply mt-2 text-center text-xs text-faint;
   }
 
   .prose table {

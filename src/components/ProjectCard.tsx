@@ -1,0 +1,160 @@
+import { useState } from 'react'
+import type { Project, ProjectImage } from '../data/projects'
+import { ExpandIcon, ExternalLinkIcon, GitHubIcon } from './icons'
+import Lightbox from './Lightbox'
+import { TechBadge } from './techIcons'
+
+const linkIcons = { repo: GitHubIcon, live: ExternalLinkIcon }
+
+/**
+ * The card's capture frame: the selected shot at 16:9, with the rest as
+ * thumbnails beneath it. Clicking the frame expands; clicking a thumbnail
+ * selects — the shopping-site pattern, so neither click surprises anyone.
+ *
+ * Crops anchor top-left rather than centre: a screenshot leads with its heading
+ * and first column, which is what makes it recognisable at this size.
+ */
+function Gallery({ images, name }: { images: ProjectImage[]; name: string }) {
+  const [selected, setSelected] = useState(0)
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <>
+      <div className="border-b border-neutral-800/80 bg-neutral-950/60">
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          aria-label={`Expand: ${images[selected].alt}`}
+          className="relative block aspect-video w-full cursor-pointer overflow-hidden focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-500"
+        >
+          <img
+            src={images[selected].src}
+            alt={images[selected].alt}
+            loading="lazy"
+            className="h-full w-full object-cover object-left-top"
+          />
+          {/* Sits at rest and brightens on hover: a capture that expands has to
+              look expandable before the pointer is anywhere near it. */}
+          <span className="absolute right-2 top-2 rounded-md bg-neutral-950/70 p-1.5 text-neutral-400 transition-colors group-hover:text-neutral-100">
+            <ExpandIcon className="h-3.5 w-3.5" />
+          </span>
+        </button>
+
+        {images.length > 1 && (
+          <ul aria-label={`${name} screenshots`} className="flex gap-1.5 px-1.5 pb-1.5">
+            {images.map((image, i) => (
+              <li key={image.src} className="min-w-0 flex-1">
+                <button
+                  type="button"
+                  onClick={() => setSelected(i)}
+                  aria-label={`Show: ${image.alt}`}
+                  aria-pressed={i === selected}
+                  className={`block aspect-video w-full cursor-pointer overflow-hidden rounded border transition-colors ${
+                    i === selected ? 'border-neutral-500' : 'border-neutral-800 hover:border-neutral-600'
+                  }`}
+                >
+                  <img
+                    src={image.src}
+                    alt=""
+                    loading="lazy"
+                    aria-hidden="true"
+                    className={`h-full w-full object-cover object-left-top transition-opacity ${
+                      i === selected ? 'opacity-100' : 'opacity-50 hover:opacity-80'
+                    }`}
+                  />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {expanded && (
+        <Lightbox
+          images={images}
+          index={selected}
+          onIndexChange={setSelected}
+          onClose={() => setExpanded(false)}
+        />
+      )}
+    </>
+  )
+}
+
+/** MMS, QFC — the monogram shown while a project has no capture. */
+function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .slice(0, 3)
+    .map((word) => word[0]?.toUpperCase() ?? '')
+    .join('')
+}
+
+export default function ProjectCard({ project }: { project: Project }) {
+  const { name, description, images, status, links, stack } = project
+
+  // aria-label names the card as a landmark: without it every card is just
+  // "article", and its GitHub link is indistinguishable from the site footer's
+  // to anyone navigating by role.
+  return (
+    <article
+      aria-label={name}
+      className="group flex w-full flex-col overflow-hidden rounded-xl border border-neutral-800/80 bg-neutral-900/30 transition-colors hover:border-neutral-700"
+    >
+      {images?.length ? (
+        <Gallery images={images} name={name} />
+      ) : (
+        // Fixed 16:9 so the row of cards keeps a common baseline whether or not a
+        // capture exists yet, and so swapping one in can't shift the layout.
+        <div className="aspect-video border-b border-neutral-800/80 bg-neutral-950/60">
+          <div className="hatch flex h-full w-full flex-col items-center justify-center gap-2" aria-hidden="true">
+            <span className="rounded-md border border-neutral-700 bg-neutral-950 px-2.5 py-1 font-mono text-sm text-neutral-400">
+              {initials(name)}
+            </span>
+            <span className="text-[0.6rem] uppercase tracking-widest text-faint">capture pending</span>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="font-medium text-neutral-100">{name}</h3>
+        <p className="mt-1.5 text-sm leading-6 text-neutral-400">{description}</p>
+
+        {/* mt-auto pins the footer to the bottom, so the rules line up across a
+            row even when one description runs a line longer than its neighbour. */}
+        <div className="mt-auto pt-4">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-neutral-800/80 pt-3">
+            {links.length > 0
+              ? links.map(({ label, href, kind }) => {
+                  const Icon = linkIcons[kind]
+
+                  return (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs text-neutral-400 transition-colors hover:text-tomorrow-orange"
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      {label}
+                    </a>
+                  )
+                })
+              : status && <span className="text-xs text-faint">{status}</span>}
+
+            {/* ml-auto keeps the stack right-aligned, and the wrap drops it onto
+                its own line rather than crushing the links at narrow widths. */}
+            <ul aria-label={`${name} stack`} className="ml-auto flex items-center gap-2">
+              {stack.map((tech) => (
+                <li key={tech} className="flex">
+                  <TechBadge name={tech} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </article>
+  )
+}

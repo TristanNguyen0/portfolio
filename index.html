@@ -2,9 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Derived from src/assets/TNlogo.png: the mark trimmed out of its blank
+         canvas and set on the page's own #0a0a0a, so the icon stays legible
+         against a light tab strip as well as a dark one. -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tells the browser to paint its own chrome dark: scrollbars, form controls
+         and the mobile URL bar stop rendering light against a near-black page. -->
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0a0a0a" />
+
     <title>Tristan Nguyen</title>
+    <meta
+      name="description"
+      content="Software engineer. Notes on a Debian homelab, CAD and 3D printing, and building Mr Mouse Stats."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Tristan Nguyen — Software Engineer" />
+    <meta
+      property="og:description"
+      content="Software engineer. Notes on a Debian homelab, CAD and 3D printing, and building Mr Mouse Stats."
+    />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="root"></div>

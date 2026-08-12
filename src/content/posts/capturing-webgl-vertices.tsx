@@ -11,7 +11,7 @@ export default function Post() {
   return (
     <>
       <p>
-        I want to design my own lightweight mouse shell — CAD it myself, print it in MJF PA12 nylon, iterate until it
+        I want to design my own lightweight mouse shell: CAD it myself, print it in MJF PA12 nylon, iterate until it
         fits my hand. But &ldquo;design a mouse shell&rdquo; is a deceptively hard first move. A mouse is one of the few
         objects you evaluate almost entirely by feel, and feel comes from millimeter-scale decisions: where the hump
         peaks, how fast the sides flare, how the front tapers into the click surfaces. Starting from a blank sketch
@@ -19,8 +19,8 @@ export default function Post() {
       </p>
 
       <p>
-        What I actually wanted was reference geometry. Not to copy a shell, but to have real, dimensionally-correct
-        shapes sitting in my CAD viewport so I could measure against them, section them, and understand <em>why</em> a
+        What I actually wanted was reference geometry. Not to copy a shell, but to have dimensionally-correct shapes
+        sitting in my CAD viewport so I could measure against them, section them, and understand <em>why</em> a
         shape that everyone loves is shaped that way.
       </p>
 
@@ -36,26 +36,25 @@ export default function Post() {
 
       <p>
         My first instinct was the obvious one. Open DevTools, go to the Network tab, filter by everything, click the 3D
-        view, and look for a <code>.glb</code>, <code>.gltf</code>, <code>.stl</code>, <code>.obj</code>,{' '}
-        <code>.ply</code> — anything with a recognizable extension or MIME type.
+        view, and look for anything with a recognizable extension or MIME type: <code>.glb</code>, <code>.gltf</code>,{' '}
+        <code>.stl</code>, <code>.obj</code>, <code>.ply</code>.
       </p>
 
       <p>Nothing. No model file. A handful of opaque binary responses and a lot of JavaScript.</p>
 
       <p>
-        That&rsquo;s the point where a lot of people stop, and it&rsquo;s the point where the interesting part starts.
-        Because here&rsquo;s the thing about a 3D viewer: <strong>whatever it&rsquo;s showing you, it had to hand to the
-        GPU.</strong>{' '}
-        The file format can be custom, the transport can be compressed, the payload can be split across a dozen
-        responses — but at the end of the pipeline there is a browser API that receives plain, decoded vertex data. That
-        API is a chokepoint, and chokepoints are where you set up shop.
+        That&rsquo;s where a lot of people stop. But a 3D viewer has one constraint it can&rsquo;t escape: whatever
+        it&rsquo;s showing you, it had to hand to the GPU. The file format can be custom, the transport can be
+        compressed, the payload can be split across a dozen responses. At the end of the pipeline there is still a
+        browser API that receives plain, decoded vertex data. That API is a chokepoint, and chokepoints are where you
+        set up shop.
       </p>
 
       <h2>The chokepoint: bufferData</h2>
 
       <p>
         In WebGL, every piece of geometry that ends up on screen passes through <code>gl.bufferData()</code>. Positions,
-        normals, indices — all of it gets uploaded to GPU memory through that one call. It&rsquo;s a method on{' '}
+        normals, indices: all of it gets uploaded to GPU memory through that one call. It&rsquo;s a method on{' '}
         <code>WebGL2RenderingContext.prototype</code>, which means it&rsquo;s a plain JavaScript object property, which
         means I can replace it.
       </p>
@@ -86,7 +85,7 @@ WebGL2RenderingContext.prototype.bufferData = function (target, data, usage) {
         <strong>
           <code>data.slice()</code>, not <code>data</code>.
         </strong>{' '}
-        Typed arrays backing WebGL uploads are frequently reused — the viewer may write the next mesh into the same{' '}
+        Typed arrays backing WebGL uploads are frequently reused; the viewer may write the next mesh into the same{' '}
         <code>ArrayBuffer</code> a frame later. If you store the reference, you&rsquo;re storing a window onto memory
         that will change out from under you. <code>slice()</code> copies the bytes at the moment of the call. I learned
         this the way everyone learns it.
@@ -114,8 +113,9 @@ WebGL2RenderingContext.prototype.bufferData = function (target, data, usage) {
       <h2>Reading three anonymous blobs</h2>
 
       <p>
-        Three files, no schema, no documentation. But the constructor names came along for free — <code>Uint16Array</code>,{' '}
-        <code>Int8Array</code>, <code>Uint32Array</code> — and that&rsquo;s most of the puzzle.
+        Three files, no schema, no documentation. But the constructor names came along for free (
+        <code>Uint16Array</code>, <code>Int8Array</code>, <code>Uint32Array</code>), and that&rsquo;s most of the
+        puzzle.
       </p>
 
       <p>
@@ -130,7 +130,7 @@ WebGL2RenderingContext.prototype.bufferData = function (target, data, usage) {
 
       <p>
         <code>Uint16Array</code> at eight bytes per vertex is quantized positions: X, Y, Z, and a fourth padding
-        component. This is the standard trick for shrinking mesh payloads — instead of three float32s (12 bytes), you
+        component. This is the standard trick for shrinking mesh payloads. Instead of three float32s (12 bytes), you
         snap each coordinate to a 16-bit grid across the model&rsquo;s bounding box (6 bytes, plus padding for
         alignment).
       </p>
@@ -145,16 +145,15 @@ WebGL2RenderingContext.prototype.bufferData = function (target, data, usage) {
       <h2>The scale problem</h2>
 
       <p>
-        Here&rsquo;s the part that took the most thought. Quantized positions are <em>unitless</em>. A value of{' '}
-        <code>48000</code> on the X axis means &ldquo;48000/65535 of the way across this model&rsquo;s bounding
-        box.&rdquo; The scale factor that converts back to real units lives in the viewer&rsquo;s shader uniforms or its
-        scene graph — not in the buffer I grabbed.
+        Quantized positions are <em>unitless</em>. A value of <code>48000</code> on the X axis means &ldquo;48000/65535
+        of the way across this model&rsquo;s bounding box.&rdquo; The scale factor that converts back to real units
+        lives in the viewer&rsquo;s shader uniforms or its scene graph, not in the buffer I grabbed.
       </p>
 
       <p>
-        I could have gone hunting for it. I didn&rsquo;t, because there was a much better source sitting right there:{' '}
-        <strong>EloShapes publishes the real dimensions of every mouse in the spec table on the same page.</strong>{' '}
-        Length, width, and height in millimeters.
+        I could have gone hunting for it. I didn&rsquo;t, because there was a much better source sitting right there:
+        EloShapes publishes the real dimensions of every mouse in the spec table on the same page. Length, width, and
+        height in millimeters.
       </p>
 
       <p>So the converter takes those three numbers as flags and solves for the scale:</p>
@@ -165,8 +164,8 @@ WebGL2RenderingContext.prototype.bufferData = function (target, data, usage) {
 
       <p>
         Sample the position buffer, find the maximum quantized value per axis, divide the known real-world dimension by
-        it, and you have your conversion factor. The result isn&rsquo;t approximately right — it&rsquo;s exactly as
-        right as the published spec, which is exactly as right as I need for reference geometry.
+        it, and you have your conversion factor. The result is exactly as right as the published spec, which is exactly
+        as right as I need for reference geometry.
       </p>
 
       <pre>
@@ -183,7 +182,7 @@ Detecting scale from quantized positions...
 
       <p>
         The last step is packing everything into a container something else can open. GLB is a good target: it&rsquo;s a
-        single self-contained binary, and every CAD package, slicer, and DCC tool reads it.
+        single self-contained binary, and most CAD packages, slicers, and DCC tools read it.
       </p>
 
       <p>The format is refreshingly simple once you&rsquo;ve read the spec:</p>
@@ -195,7 +194,7 @@ Detecting scale from quantized positions...
       </pre>
 
       <p>
-        The JSON describes the layout of the binary chunk through three layers of indirection — <code>bufferViews</code>{' '}
+        The JSON describes the layout of the binary chunk through three layers of indirection. <code>bufferViews</code>{' '}
         slice the blob into byte ranges, <code>accessors</code> say how to interpret each range (component type, count,
         element type), and <code>meshes.primitives</code> map accessors to semantic attributes like{' '}
         <code>POSITION</code> and <code>NORMAL</code>.
@@ -228,13 +227,13 @@ Detecting scale from quantized positions...
 
       <h2>What&rsquo;s still rough</h2>
 
-      <p>Being honest about the parts I&rsquo;d fix before calling this finished:</p>
+      <p>The parts I&rsquo;d fix before calling this finished:</p>
 
       <ul>
         <li>
           <strong>The buffer-classification fallback is wrong.</strong> The primary path reads the typed-array name out
           of the downloaded filename, which is reliable. The size-based fallback assumes the smallest file is the index
-          buffer — but for a closed manifold mesh, triangle count is roughly twice vertex count, which puts the uint32
+          buffer. But for a closed manifold mesh, triangle count is roughly twice vertex count, which puts the uint32
           index buffer at ~24 bytes per vertex against 8 for positions. Indices are usually the <em>largest</em> file.
           The fallback is backwards.
         </li>
@@ -257,7 +256,7 @@ Detecting scale from quantized positions...
       </ul>
 
       <p>
-        None of that mattered for the goal. I needed dimensionally-honest shapes to measure against in CAD, and
+        None of that mattered for the goal. I needed dimensionally-accurate shapes to measure against in CAD, and
         that&rsquo;s what I got.
       </p>
 
@@ -272,7 +271,7 @@ Detecting scale from quantized positions...
 
       <p>
         This generalizes well beyond WebGL. Canvas 2D, Web Audio, <code>fetch</code> and <code>XMLHttpRequest</code>,{' '}
-        <code>WebAssembly.instantiate</code> — any of these can be wrapped the same way when the data you want is being
+        <code>WebAssembly.instantiate</code>: any of these can be wrapped the same way when the data you want is being
         rendered but not offered. The prototype chain is writable and DevTools is a debugger. Reverse engineering a
         rendering pipeline is mostly just deciding to look one layer lower than the Network tab.
       </p>
