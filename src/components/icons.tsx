@@ -26,6 +26,15 @@ export function ExternalLinkIcon({ className = 'h-5 w-5' }: IconProps) {
   )
 }
 
+/** Four corners pointing out — the affordance on a card capture that expands. */
+export function ExpandIcon({ className = 'h-5 w-5' }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M3 3h7.5v2.25H6.44l4.28 4.28-1.59 1.59L4.85 6.84V10.5H3zM21 3v7.5h-2.25V6.44l-4.28 4.28-1.59-1.59 4.28-4.28H13.5V3zM3 21v-7.5h2.25v4.06l4.28-4.28 1.59 1.59-4.28 4.28h4.06V21zM21 21h-7.5v-2.25h4.06l-4.28-4.28 1.59-1.59 4.28 4.28V13.5H21z" />
+    </svg>
+  )
+}
+
 export function MailIcon({ className = 'h-5 w-5' }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">

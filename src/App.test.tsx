@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import App from './App'
 import { projects } from './data/projects'
 import { techLabel } from './data/techPaths'
@@ -53,6 +53,75 @@ test('links a project to its repo, and falls back to a status when there is none
   // rather than rendering an empty footer.
   for (const project of projects.filter((p) => p.links.length === 0)) {
     expect(screen.getByText(project.status!)).toBeInTheDocument()
+  }
+})
+
+// The capture gallery on a project card. Driven off whichever project declares
+// images, so these keep working when a second project gets captures of its own.
+
+const withImages = projects.find((project) => project.images?.length)!
+
+test('fills the card frame with the first capture, and offers the rest as thumbnails', () => {
+  render(<App />)
+
+  const card = within(screen.getByRole('article', { name: withImages.name }))
+  expect(card.getByRole('img', { name: withImages.images![0].alt })).toHaveAttribute(
+    'src',
+    withImages.images![0].src,
+  )
+
+  const thumbnails = within(card.getByRole('list', { name: `${withImages.name} screenshots` }))
+  for (const image of withImages.images!) {
+    expect(thumbnails.getByRole('button', { name: `Show: ${image.alt}` })).toBeInTheDocument()
+  }
+})
+
+test('swaps the frame to the thumbnail that was picked', () => {
+  render(<App />)
+
+  const card = within(screen.getByRole('article', { name: withImages.name }))
+  const second = withImages.images![1]
+
+  fireEvent.click(card.getByRole('button', { name: `Show: ${second.alt}` }))
+  expect(card.getByRole('button', { name: `Expand: ${second.alt}` })).toBeInTheDocument()
+})
+
+test('expands a capture, steps through the set, and closes', () => {
+  render(<App />)
+
+  const card = within(screen.getByRole('article', { name: withImages.name }))
+  const [first, second] = withImages.images!
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+  fireEvent.click(card.getByRole('button', { name: `Expand: ${first.alt}` }))
+  let dialog = within(screen.getByRole('dialog'))
+  expect(dialog.getByRole('img', { name: first.alt })).toHaveAttribute('src', first.src)
+
+  fireEvent.click(dialog.getByRole('button', { name: /next screenshot/i }))
+  dialog = within(screen.getByRole('dialog'))
+  expect(dialog.getByRole('img', { name: second.alt })).toHaveAttribute('src', second.src)
+
+  fireEvent.click(dialog.getByRole('button', { name: /close/i }))
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+})
+
+test('closes the expanded capture on Escape', () => {
+  render(<App />)
+
+  const card = within(screen.getByRole('article', { name: withImages.name }))
+  fireEvent.click(card.getByRole('button', { name: `Expand: ${withImages.images![0].alt}` }))
+  expect(screen.getByRole('dialog')).toBeInTheDocument()
+
+  fireEvent.keyDown(document, { key: 'Escape' })
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+})
+
+test('shows a placeholder frame for a project with no captures', () => {
+  render(<App />)
+
+  for (const project of projects.filter((p) => !p.images?.length)) {
+    const card = within(screen.getByRole('article', { name: project.name }))
+    expect(card.getByText(/capture pending/i)).toBeInTheDocument()
   }
 })
 
