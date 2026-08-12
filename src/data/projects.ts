@@ -52,8 +52,19 @@ export const projects: Project[] = [
       { src: mrMouseStatsPlayers, alt: 'Players table: DPI, sensitivity, eDPI, and mouse per player' },
       { src: mrMouseStatsAdmin, alt: 'Admin: chat responses the parser could not structure, resolved by hand' },
     ],
-    links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/mr-mouse-stats', kind: 'repo' }],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/TristanNguyen0/mr-mouse-stats', kind: 'repo' },
+      { label: 'Live site', href: 'https://d2i2zvekyp6xea.cloudfront.net/', kind: 'live' },
+    ],
     stack: ['Python', 'FastAPI', 'PostgreSQL', 'Next.js', 'AWS', 'Terraform'],
+  },
+  {
+    slug: 'webgl-mesh-capture',
+    name: 'WebGL Mesh Capture',
+    description:
+      "Pulls geometry out of 3D viewers that never offer a download. Whatever reaches the screen has to go through gl.bufferData() first, so a bookmarklet wraps that call and keeps the bytes; a dependency-free Python script reassembles them into a .glb. Nothing leaves the machine.",
+    links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/webgl-mesh-capture', kind: 'repo' }],
+    stack: ['JavaScript', 'WebGL', 'Python'],
   },
   {
     slug: 'qmk-web-app',

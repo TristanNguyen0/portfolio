@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import App from './App'
 import { projects } from './data/projects'
-import { techLabel } from './data/techPaths'
+import { techColors, techLabel } from './data/techPaths'
 
 // Driven off the project data rather than hardcoded copy, so rewording a card
 // or adding a project doesn't break the suite.
@@ -53,6 +53,33 @@ test('links a project to its repo, and falls back to a status when there is none
   // rather than rendering an empty footer.
   for (const project of projects.filter((p) => p.links.length === 0)) {
     expect(screen.getByText(project.status!)).toBeInTheDocument()
+  }
+})
+
+test('links a project to its live deployment when it has one', () => {
+  render(<App />)
+
+  for (const project of projects) {
+    for (const live of project.links.filter((link) => link.kind === 'live')) {
+      const card = within(screen.getByRole('article', { name: project.name }))
+      const link = card.getByRole('link', { name: live.label })
+      expect(link).toHaveAttribute('href', live.href)
+      expect(link).toHaveAttribute('target', '_blank')
+    }
+  }
+})
+
+test('paints each stack icon in its brand colour', () => {
+  render(<App />)
+
+  // techColors is a Record over TechName, so TypeScript already guarantees every
+  // technology has an entry. What this pins is that the entry reaches the icon.
+  for (const project of projects) {
+    const stack = within(screen.getByRole('list', { name: `${project.name} stack` }))
+
+    for (const tech of project.stack) {
+      expect(stack.getByRole('img', { name: techLabel(tech) })).toHaveClass(techColors[tech])
+    }
   }
 })
 
