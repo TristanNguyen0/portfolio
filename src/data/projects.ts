@@ -44,9 +44,9 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: 'mr-mouse-stats',
-    name: 'Mr Mouse Stats',
+    name: 'MR Mouse Stats',
     description:
-      'DPI, in-game sensitivity, and hardware for the pros playing Marvel Rivals in the Ignite circuit. Settings collected through Twitch IRC, ',
+      'Mouse settings database for Marvel Rivals pros. Includes DPI, in-game sens, eDPI, and hardware. Collected from Twitch chat commands via IRC and Nightbot, parsed with Python. Player info collected through Liquipedia with MediaWiki API.',
     images: [
       { src: mrMouseStatsOverview, alt: 'Overview: eDPI and DPI distributions across the circuit, and the mice in use' },
       { src: mrMouseStatsPlayers, alt: 'Players table: DPI, sensitivity, eDPI, and mouse per player' },
