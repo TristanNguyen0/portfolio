@@ -71,7 +71,7 @@ export const projects: Project[] = [
     name: 'QMK Firmware Customizer',
     description:
       'Build QMK keyboard firmware visually, with no toolchain to install and no C to write. 3,748 keyboards discovered from a pinned QMK tree; each build compiles in a disposable, network-isolated container.',
-    status: 'Phase 1 of 6 · not public yet',
+    status: 'In Progress',
     links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/qmk-web-app', kind: 'repo' }],
     stack: ['TypeScript', 'Next.js', 'Fastify', 'PostgreSQL', 'Docker', 'Tailwind CSS'],
   },
