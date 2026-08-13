@@ -4,6 +4,8 @@
 import mrMouseStatsAdmin from '../assets/projects/mr-mouse-stats/admin-candidates.png'
 import mrMouseStatsOverview from '../assets/projects/mr-mouse-stats/overview.png'
 import mrMouseStatsPlayers from '../assets/projects/mr-mouse-stats/players.png'
+import eloShapesCapture from '../assets/projects/webgl-mesh-capture/elo-shapes-capture.png'
+import eloShapesConversion from '../assets/projects/webgl-mesh-capture/elo-shapes-conversion.png'
 import type { TechName } from './techPaths'
 
 export interface ProjectImage {
@@ -63,6 +65,10 @@ export const projects: Project[] = [
     name: 'WebGL Mesh Capture',
     description:
       "Capture mesh geometry from any WebGL viewer in your browser and a python script to convert it to a standard .glb file.",
+      images:[
+        {src: eloShapesCapture, alt: 'Capturing buffers from eloshapes, a mouse shape database'},
+        {src: eloShapesConversion, alt: 'Converting buffers to .glb file with Python script'},
+      ],
     links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/webgl-mesh-capture', kind: 'repo' }],
     stack: ['JavaScript', 'Python'],
   },
