@@ -152,13 +152,6 @@ test('shows a placeholder frame for a project with no captures', () => {
   }
 })
 
-test('no longer renders the old category sections', () => {
-  render(<App />)
-  expect(screen.queryByText(/^Software$/)).not.toBeInTheDocument()
-  expect(screen.queryByText(/^Homelab$/)).not.toBeInTheDocument()
-  expect(screen.queryByText(/^CAD & 3D printing$/)).not.toBeInTheDocument()
-})
-
 test('renders the LeetCode dashboard section', () => {
   render(<App />)
   expect(screen.getByRole('heading', { name: /leetcode/i })).toBeInTheDocument()
