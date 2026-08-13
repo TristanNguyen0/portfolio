@@ -44,24 +44,35 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: 'mr-mouse-stats',
-    name: 'Mr Mouse Stats',
+    name: 'MR Mouse Stats',
     description:
-      'DPI, in-game sensitivity, and hardware for the pros playing Marvel Rivals in the Ignite circuit. Settings are collected passively from Twitch chat and appended rather than overwritten, so the site shows how a player drifted across a season.',
+      'Mouse settings database for Marvel Rivals pros. Includes DPI, in-game sens, eDPI, and hardware. Collected from Twitch chat commands via IRC and Nightbot, parsed with Python. Player info collected through Liquipedia with MediaWiki API.',
     images: [
       { src: mrMouseStatsOverview, alt: 'Overview: eDPI and DPI distributions across the circuit, and the mice in use' },
       { src: mrMouseStatsPlayers, alt: 'Players table: DPI, sensitivity, eDPI, and mouse per player' },
       { src: mrMouseStatsAdmin, alt: 'Admin: chat responses the parser could not structure, resolved by hand' },
     ],
-    links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/mr-mouse-stats', kind: 'repo' }],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/TristanNguyen0/mr-mouse-stats', kind: 'repo' },
+      { label: 'Live site', href: 'https://d2i2zvekyp6xea.cloudfront.net/', kind: 'live' },
+    ],
     stack: ['Python', 'FastAPI', 'PostgreSQL', 'Next.js', 'AWS', 'Terraform'],
+  },
+  {
+    slug: 'webgl-mesh-capture',
+    name: 'WebGL Mesh Capture',
+    description:
+      "Capture mesh geometry from any WebGL viewer in your browser and a python script to convert it to a standard .glb file.",
+    links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/webgl-mesh-capture', kind: 'repo' }],
+    stack: ['JavaScript', 'Python'],
   },
   {
     slug: 'qmk-web-app',
     name: 'QMK Firmware Customizer',
     description:
       'Build QMK keyboard firmware visually, with no toolchain to install and no C to write. 3,748 keyboards discovered from a pinned QMK tree; each build compiles in a disposable, network-isolated container.',
-    status: 'Phase 1 of 6 · not public yet',
-    links: [],
+    status: 'In Progress',
+    links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/qmk-web-app', kind: 'repo' }],
     stack: ['TypeScript', 'Next.js', 'Fastify', 'PostgreSQL', 'Docker', 'Tailwind CSS'],
   },
 ]

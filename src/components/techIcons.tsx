@@ -1,7 +1,8 @@
-import { techLabel, techPaths, type TechName } from '../data/techPaths'
+import { techColors, techLabel, techPaths, type TechName } from '../data/techPaths'
 
 /**
- * One stack badge. Monochrome by design: it inherits colour from the card.
+ * One stack badge. Colour comes from the caller so the icon can still be used
+ * monochrome somewhere else; TechBadge is what applies the brand colour.
  *
  * No <svg><title>: the name is shown by TechBadge's own tooltip, and a title
  * here would stack the browser's native one on top of it after a delay.
@@ -22,7 +23,13 @@ export function TechIcon({ name, className = 'h-4 w-4' }: { name: TechName; clas
 export function TechBadge({ name }: { name: TechName }) {
   return (
     <span className="tech-badge relative flex">
-      <TechIcon name={name} className="h-4 w-4 text-neutral-500 transition-colors hover:text-neutral-200" />
+      {/* Brand colour, held slightly back at rest so a row of six marks reads as
+          one stack rather than six competing logos, and brought to full on
+          hover along with the label. */}
+      <TechIcon
+        name={name}
+        className={`h-4 w-4 opacity-75 transition-opacity hover:opacity-100 ${techColors[name]}`}
+      />
 
       {/* Right-aligned rather than centred so the widest label on the last icon
           in a row still opens inward, instead of off the card and off-screen.
