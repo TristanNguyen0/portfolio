@@ -32,7 +32,7 @@ test('shows each project stack as labelled icons', () => {
 test('carries a hover label naming each technology in full', () => {
   render(<App />)
 
-  const stack = within(screen.getByRole('list', { name: 'Mr Mouse Stats stack' }))
+  const stack = within(screen.getByRole('list', { name: 'MR Mouse Stats stack' }))
   // One tooltip per icon, and abbreviations are spelled out rather than repeated.
   expect(stack.getByText('Amazon Web Services')).toBeInTheDocument()
   expect(stack.queryByText('AWS')).not.toBeInTheDocument()
