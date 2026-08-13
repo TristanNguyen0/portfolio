@@ -46,7 +46,7 @@ export const projects: Project[] = [
     slug: 'mr-mouse-stats',
     name: 'Mr Mouse Stats',
     description:
-      'DPI, in-game sensitivity, and hardware for the pros playing Marvel Rivals in the Ignite circuit. Settings are collected passively from Twitch chat and appended rather than overwritten, so the site shows how a player drifted across a season.',
+      'DPI, in-game sensitivity, and hardware for the pros playing Marvel Rivals in the Ignite circuit. Settings collected through Twitch IRC, ',
     images: [
       { src: mrMouseStatsOverview, alt: 'Overview: eDPI and DPI distributions across the circuit, and the mice in use' },
       { src: mrMouseStatsPlayers, alt: 'Players table: DPI, sensitivity, eDPI, and mouse per player' },
@@ -62,9 +62,9 @@ export const projects: Project[] = [
     slug: 'webgl-mesh-capture',
     name: 'WebGL Mesh Capture',
     description:
-      "Pulls geometry out of 3D viewers that never offer a download. Whatever reaches the screen has to go through gl.bufferData() first, so a bookmarklet wraps that call and keeps the bytes; a dependency-free Python script reassembles them into a .glb. Nothing leaves the machine.",
+      "Capture mesh geometry from any WebGL viewer in your browser and a python script to convert it to a standard .glb file.",
     links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/webgl-mesh-capture', kind: 'repo' }],
-    stack: ['JavaScript', 'WebGL', 'Python'],
+    stack: ['JavaScript', 'Python'],
   },
   {
     slug: 'qmk-web-app',
@@ -72,7 +72,7 @@ export const projects: Project[] = [
     description:
       'Build QMK keyboard firmware visually, with no toolchain to install and no C to write. 3,748 keyboards discovered from a pinned QMK tree; each build compiles in a disposable, network-isolated container.',
     status: 'Phase 1 of 6 · not public yet',
-    links: [],
+    links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/qmk-web-app', kind: 'repo' }],
     stack: ['TypeScript', 'Next.js', 'Fastify', 'PostgreSQL', 'Docker', 'Tailwind CSS'],
   },
 ]
