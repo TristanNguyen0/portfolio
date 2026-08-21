@@ -64,7 +64,7 @@ export const projects: Project[] = [
     slug: 'webgl-mesh-capture',
     name: 'WebGL Mesh Capture',
     description:
-      "Capture mesh geometry from any WebGL viewer in your browser and a python script to convert it to a standard .glb file.",
+      "Capture mesh geometry from any WebGL viewer in your browser and a Python script to convert it to a standard .glb file.",
       images:[
         {src: eloShapesCapture, alt: 'Capturing buffers from eloshapes, a mouse shape database'},
         {src: eloShapesConversion, alt: 'Converting buffers to .glb file with Python script'},
