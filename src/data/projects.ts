@@ -1,6 +1,7 @@
 // Drives the project grid on the home page. One entry per project; the card
 // component reads everything from here, so adding a project is a data change.
 
+import qmkEditor from '../assets/projects/qmk-web-app/editor.png'
 import mrMouseStatsAdmin from '../assets/projects/mr-mouse-stats/admin-candidates.png'
 import mrMouseStatsOverview from '../assets/projects/mr-mouse-stats/overview.png'
 import mrMouseStatsPlayers from '../assets/projects/mr-mouse-stats/players.png'
@@ -45,6 +46,17 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    slug: 'qmk-web-app',
+    name: 'QMK Firmware Customizer',
+    description:
+      'Full-stack web app that compiles custom QMK keyboard firmware from a visual editor. Also features an LLM assistant (Claude haiku-4.5) that turns plain-English requests into validated configuration edits.',
+    images: [
+      { src: qmkEditor, alt: 'Keymap editor: the layers of a 65% board, and the assistant panel for describing changes in plain words' },
+    ],
+    links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/qmk-web-app', kind: 'repo' }],
+    stack: ['TypeScript', 'Next.js', 'Fastify', 'PostgreSQL', 'Docker', 'Tailwind CSS'],
+  },
+  {
     slug: 'mr-mouse-stats',
     name: 'MR Mouse Stats',
     description:
@@ -71,14 +83,5 @@ export const projects: Project[] = [
       ],
     links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/webgl-mesh-capture', kind: 'repo' }],
     stack: ['JavaScript', 'Python'],
-  },
-  {
-    slug: 'qmk-web-app',
-    name: 'QMK Firmware Customizer',
-    description:
-      'Build QMK keyboard firmware visually, with no toolchain to install and no C to write. 3,748 keyboards discovered from a pinned QMK tree; each build compiles in a disposable, network-isolated container.',
-    status: 'In Progress',
-    links: [{ label: 'GitHub', href: 'https://github.com/TristanNguyen0/qmk-web-app', kind: 'repo' }],
-    stack: ['TypeScript', 'Next.js', 'Fastify', 'PostgreSQL', 'Docker', 'Tailwind CSS'],
   },
 ]

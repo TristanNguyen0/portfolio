@@ -86,7 +86,7 @@ test('paints each stack icon in its brand colour', () => {
 // The capture gallery on a project card. Driven off whichever project declares
 // images, so these keep working when a second project gets captures of its own.
 
-const withImages = projects.find((project) => project.images?.length)!
+const withImages = projects.find((project) => project.images && project.images.length > 1)!
 
 test('fills the card frame with the first capture, and offers the rest as thumbnails', () => {
   render(<App />)
